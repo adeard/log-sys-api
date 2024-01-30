@@ -1,0 +1,75 @@
+definitions:
+  domain.ApplicationData:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updated_at:
+        type: string
+      url:
+        type: string
+    type: object
+  domain.ApplicationRequest:
+    properties:
+      created_at:
+        type: string
+      name:
+        type: string
+      updated_at:
+        type: string
+      url:
+        type: string
+    type: object
+  domain.Response:
+    properties:
+      data: {}
+      elapsed_time:
+        type: string
+      message:
+        type: string
+    type: object
+host: localhost:6969
+info:
+  contact:
+    email: support@swagger.io
+    name: ADE ARDIAN
+    url: http://www.swagger.io/support
+  description: LOGGING SYSTEM API SERVICE
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: API SWAGGER FOR LOGGING SYSTEM API SERVICE
+  version: 1.0.0
+paths:
+  /api/v1/application:
+    post:
+      consumes:
+      - application/json
+      description: Create Application
+      parameters:
+      - description: ' ApplicationRequest Schema '
+        in: body
+        name: ApplicationRequest
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ApplicationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/domain.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.ApplicationData'
+              type: object
+      summary: Create Application
+      tags:
+      - Application
+swagger: "2.0"
