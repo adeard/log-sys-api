@@ -5,6 +5,7 @@ import (
 	"log-sys-api/config"
 	"log-sys-api/docs"
 	"log-sys-api/modules/application"
+	"log-sys-api/modules/logging"
 	"net/http"
 	"os"
 
@@ -48,6 +49,7 @@ func main() {
 
 	v1 := router.Group("log-sys/api/v1")
 
+	logging.NewLoggingHandler(v1, logging.LoggingRegistry(db))
 	application.NewApplicationHandler(v1, application.ApplicationRegistry(db))
 
 	// router.Run(":86")

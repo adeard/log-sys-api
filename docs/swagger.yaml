@@ -23,6 +23,42 @@ definitions:
       url:
         type: string
     type: object
+  domain.LogData:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      recipients:
+        type: string
+      request:
+        type: string
+      response:
+        type: string
+      source:
+        type: string
+      status_code:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  domain.LogRequest:
+    properties:
+      created_at:
+        type: string
+      recipients:
+        type: string
+      request:
+        type: string
+      response:
+        type: string
+      source:
+        type: string
+      status_code:
+        type: integer
+      updated_at:
+        type: string
+    type: object
   domain.Response:
     properties:
       data: {}
@@ -72,4 +108,31 @@ paths:
       summary: Create Application
       tags:
       - Application
+  /api/v1/log:
+    post:
+      consumes:
+      - application/json
+      description: Create Log
+      parameters:
+      - description: ' LogRequest Schema '
+        in: body
+        name: LogRequest
+        required: true
+        schema:
+          $ref: '#/definitions/domain.LogRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/domain.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.LogData'
+              type: object
+      summary: Create Log
+      tags:
+      - Log
 swagger: "2.0"
