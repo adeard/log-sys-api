@@ -15,7 +15,7 @@ type LogData struct {
 	LogRequest
 }
 
-func (LogData) TableName() string {
+func (LogRequest) TableName() string {
 	return "logs"
 }
 

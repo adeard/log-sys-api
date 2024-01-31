@@ -2,12 +2,13 @@ package logging
 
 import (
 	"log-sys-api/domain"
+	"log-sys-api/utils"
 
 	"gorm.io/gorm"
 )
 
 type Repository interface {
-	Store(input domain.LogRequest) (domain.LogData, error)
+	Store(input domain.LogRequest) (domain.LogRequest, error)
 }
 
 type repository struct {
@@ -18,11 +19,11 @@ func NewRepository(db *gorm.DB) *repository {
 	return &repository{db}
 }
 
-func (r *repository) Store(input domain.LogRequest) (domain.LogData, error) {
+func (r *repository) Store(input domain.LogRequest) (domain.LogRequest, error) {
+	err := r.db.Create(&input).Error
+	if err != nil {
+		utils.LogInit(err.Error())
+	}
 
-	log := domain.LogData{LogRequest: input}
-
-	err := r.db.Create(&log).Error
-
-	return log, err
+	return input, err
 }

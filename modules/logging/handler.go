@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 )
 
 type loggingHandler struct {
@@ -38,15 +37,10 @@ func (h *loggingHandler) Create(c *gin.Context) {
 	err := c.ShouldBindJSON(&logInput)
 	if err != nil {
 
-		errorMessages := []string{}
-
-		for _, v := range err.(validator.ValidationErrors) {
-			errorMessage := fmt.Sprintf("Error on field %s , condition : %s", v.Field(), v.ActualTag())
-			errorMessages = append(errorMessages, errorMessage)
-		}
+		utils.LogInit(err.Error())
 
 		c.JSON(http.StatusBadRequest, gin.H{
-			"errors": errorMessages,
+			"errors": err.Error(),
 		})
 
 		return

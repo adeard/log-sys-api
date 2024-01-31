@@ -6,7 +6,7 @@ import (
 )
 
 type Service interface {
-	Store(input domain.LogRequest) (domain.LogData, error)
+	Store(input domain.LogRequest) (domain.LogRequest, error)
 }
 
 type service struct {
@@ -17,14 +17,16 @@ func NewService(repository Repository) *service {
 	return &service{repository}
 }
 
-func (s *service) Store(input domain.LogRequest) (domain.LogData, error) {
+func (s *service) Store(input domain.LogRequest) (domain.LogRequest, error) {
 
 	input.CreatedAt = utils.GetCurrentDateTime()
 	input.UpdatedAt = utils.GetCurrentDateTime()
 
 	log, err := s.repository.Store(input)
 	if err != nil {
-		return domain.LogData{}, err
+		utils.LogInit(err.Error())
+
+		return domain.LogRequest{}, err
 	}
 
 	return log, err
