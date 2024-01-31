@@ -34,20 +34,20 @@ import (
 func main() {
 	db := config.Connect()
 
-	docs.SwaggerInfo.BasePath = "/log-sys"
+	docs.SwaggerInfo.BasePath = "/LogSystemApi"
 
 	router := gin.Default()
 	router.Use(cors.AllowAll())
-	router.GET("log-sys/", func(ctx *gin.Context) {
+	router.GET("LogSystemApi/", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
 			"title":         "Logging System API Service",
 			"documentation": "/swagger/index.html",
 		})
 	})
 
-	router.GET("log-sys/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	router.GET("LogSystemApi/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	v1 := router.Group("log-sys/api/v1")
+	v1 := router.Group("LogSystemApi/api/v1")
 
 	logging.NewLoggingHandler(v1, logging.LoggingRegistry(db))
 	application.NewApplicationHandler(v1, application.ApplicationRegistry(db))

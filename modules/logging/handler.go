@@ -3,6 +3,7 @@ package logging
 import (
 	"fmt"
 	"log-sys-api/domain"
+	"log-sys-api/utils"
 	"net/http"
 	"time"
 
@@ -53,6 +54,8 @@ func (h *loggingHandler) Create(c *gin.Context) {
 
 	log, err := h.loggingService.Store(logInput)
 	if err != nil {
+		utils.LogInit(err.Error())
+
 		c.JSON(http.StatusBadRequest, gin.H{
 			"errors": err.Error(),
 		})
