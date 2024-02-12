@@ -19,7 +19,46 @@ func NewLoggingHandler(v1 *gin.RouterGroup, loggingService Service) {
 	handler := &loggingHandler{loggingService}
 
 	log := v1.Group("log")
+	log.GET("", handler.GetAll)
 	log.POST("", handler.Create)
+}
+
+// @Summary Get All Log
+// @Description Get All Log
+// @Accept  json
+// @Param LogFilterRequest query domain.LogFilterRequest true " LogFilterRequest Schema "
+// @Produce  json
+// @Success 200 {object} domain.Response{data=domain.LogData}
+// @Router /api/v1/log [get]
+// @Tags Log
+func (h *loggingHandler) GetAll(c *gin.Context) {
+	start := time.Now()
+	var input domain.LogFilterRequest
+
+	err := c.Bind(&input)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, domain.Response{
+			Message:     err.Error(),
+			ElapsedTime: fmt.Sprint(time.Since(start)),
+		})
+
+		return
+	}
+
+	logs, err := h.loggingService.GetAll(input)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, domain.Response{
+			Message:     err.Error(),
+			ElapsedTime: fmt.Sprint(time.Since(start)),
+		})
+
+		return
+	}
+
+	c.JSON(http.StatusOK, domain.Response{
+		Data:        logs,
+		ElapsedTime: fmt.Sprint(time.Since(start)),
+	})
 }
 
 // @Summary Create Log

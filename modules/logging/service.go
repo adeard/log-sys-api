@@ -7,6 +7,7 @@ import (
 
 type Service interface {
 	Store(input domain.LogRequest) (domain.LogRequest, error)
+	GetAll(input domain.LogFilterRequest) ([]domain.LogData, error)
 }
 
 type service struct {
@@ -15,6 +16,12 @@ type service struct {
 
 func NewService(repository Repository) *service {
 	return &service{repository}
+}
+
+func (s *service) GetAll(logFilter domain.LogFilterRequest) ([]domain.LogData, error) {
+	logs, err := s.repository.FindAll(logFilter)
+
+	return logs, err
 }
 
 func (s *service) Store(input domain.LogRequest) (domain.LogRequest, error) {
