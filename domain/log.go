@@ -25,3 +25,8 @@ type LogFilterRequest struct {
 	LogRequest
 	FilterRequest
 }
+
+type LogTotalData struct {
+	LogDate  string `json:"log_date" form:"log_date"`
+	LogTotal int    `json:"log_total" form:"log_total"`
+}

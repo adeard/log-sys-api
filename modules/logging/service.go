@@ -9,6 +9,7 @@ import (
 type Service interface {
 	Store(input domain.LogRequest) (domain.LogRequest, error)
 	GetAll(input domain.LogFilterRequest) (domain.PagingResponse, error)
+	GetTotalByDate(input domain.LogFilterRequest) (domain.LogTotalData, error)
 }
 
 type service struct {
@@ -40,6 +41,13 @@ func (s *service) GetAll(logFilter domain.LogFilterRequest) (domain.PagingRespon
 	result.Page = logFilter.Page
 	result.TotalData = int(logsTotal)
 	result.TotalPage = int(math.Ceil(totalPage))
+
+	return result, err
+}
+
+func (s *service) GetTotalByDate(logFilter domain.LogFilterRequest) (domain.LogTotalData, error) {
+
+	result, err := s.repository.CountByDate(logFilter)
 
 	return result, err
 }

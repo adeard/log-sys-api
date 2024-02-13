@@ -20,6 +20,7 @@ func NewLoggingHandler(v1 *gin.RouterGroup, loggingService Service) {
 
 	log := v1.Group("log")
 	log.GET("", handler.GetAll)
+	log.GET("range", handler.GetAll)
 	log.POST("", handler.Create)
 }
 
@@ -46,6 +47,44 @@ func (h *loggingHandler) GetAll(c *gin.Context) {
 	}
 
 	logs, err := h.loggingService.GetAll(input)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, domain.Response{
+			Message:     err.Error(),
+			ElapsedTime: fmt.Sprint(time.Since(start)),
+		})
+
+		return
+	}
+
+	c.JSON(http.StatusOK, domain.Response{
+		Data:        logs,
+		ElapsedTime: fmt.Sprint(time.Since(start)),
+	})
+}
+
+// @Summary Get All Log By Range
+// @Description Get All Log By Range
+// @Accept  json
+// @Param LogFilterRequest query domain.LogFilterRequest true " LogFilterRequest Schema "
+// @Produce  json
+// @Success 200 {object} domain.Response{data=domain.LogTotalData}
+// @Router /api/v1/log/range [get]
+// @Tags Log
+func (h *loggingHandler) GetAllByRange(c *gin.Context) {
+	start := time.Now()
+	var input domain.LogFilterRequest
+
+	err := c.Bind(&input)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, domain.Response{
+			Message:     err.Error(),
+			ElapsedTime: fmt.Sprint(time.Since(start)),
+		})
+
+		return
+	}
+
+	logs, err := h.loggingService.GetTotalByDate(input)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.Response{
 			Message:     err.Error(),
