@@ -28,7 +28,7 @@ func NewLoggingHandler(v1 *gin.RouterGroup, loggingService Service) {
 // @Accept  json
 // @Param LogFilterRequest query domain.LogFilterRequest true " LogFilterRequest Schema "
 // @Produce  json
-// @Success 200 {object} domain.Response{data=domain.LogData}
+// @Success 200 {object} domain.Response{data=domain.PagingResponse{data=[]domain.LogData}}
 // @Router /api/v1/log [get]
 // @Tags Log
 func (h *loggingHandler) GetAll(c *gin.Context) {

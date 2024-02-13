@@ -10,6 +10,7 @@ import (
 type Repository interface {
 	Store(input domain.LogRequest) (domain.LogRequest, error)
 	FindAll(input domain.LogFilterRequest) ([]domain.LogData, error)
+	CountData(input domain.LogFilterRequest) (int64, error)
 }
 
 type repository struct {
@@ -21,7 +22,7 @@ func NewRepository(db *gorm.DB) *repository {
 }
 
 func (r *repository) FindAll(input domain.LogFilterRequest) ([]domain.LogData, error) {
-	var mob []domain.LogData
+	var logs []domain.LogData
 
 	q := r.db.Debug().Table("logs")
 
@@ -45,9 +46,18 @@ func (r *repository) FindAll(input domain.LogFilterRequest) ([]domain.LogData, e
 		q = q.Where("created_at between ? and ?", input.StartDate, input.EndDate)
 	}
 
-	err := q.Find(&mob).Error
+	offset := (input.Limit * (input.Page - 1))
 
-	return mob, err
+	err := q.
+		Limit(input.Limit).
+		Offset(offset).
+		Find(&logs).
+		Error
+	if err != nil {
+		return nil, err
+	}
+
+	return logs, err
 }
 
 func (r *repository) Store(input domain.LogRequest) (domain.LogRequest, error) {
@@ -57,4 +67,34 @@ func (r *repository) Store(input domain.LogRequest) (domain.LogRequest, error) {
 	}
 
 	return input, err
+}
+
+func (r *repository) CountData(input domain.LogFilterRequest) (int64, error) {
+	var logTotal int64
+
+	q := r.db.Debug().Table("logs")
+
+	if input.Request != "" {
+		q = q.Where("request LIKE ?", "%"+input.Request+"%")
+	}
+
+	if input.Response != "" {
+		q = q.Where("response LIKE ?", "%"+input.Response+"%")
+	}
+
+	if input.StatusCode > 0 {
+		q = q.Where("status_code = ?", input.StatusCode)
+	}
+
+	if input.Source != "" {
+		q = q.Where("source = ?", input.Source)
+	}
+
+	if input.StartDate != "" && input.EndDate != "" {
+		q = q.Where("created_at between ? and ?", input.StartDate, input.EndDate)
+	}
+
+	q.Count(&logTotal)
+
+	return logTotal, nil
 }

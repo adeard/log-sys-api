@@ -59,6 +59,18 @@ definitions:
       updated_at:
         type: string
     type: object
+  domain.PagingResponse:
+    properties:
+      data: {}
+      page:
+        type: integer
+      per_page:
+        type: integer
+      total_data:
+        type: integer
+      total_page:
+        type: integer
+    type: object
   domain.Response:
     properties:
       data: {}
@@ -163,7 +175,14 @@ paths:
             - $ref: '#/definitions/domain.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/domain.LogData'
+                  allOf:
+                  - $ref: '#/definitions/domain.PagingResponse'
+                  - properties:
+                      data:
+                        items:
+                          $ref: '#/definitions/domain.LogData'
+                        type: array
+                    type: object
               type: object
       summary: Get All Log
       tags:
