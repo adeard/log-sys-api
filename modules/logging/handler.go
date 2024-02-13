@@ -20,7 +20,7 @@ func NewLoggingHandler(v1 *gin.RouterGroup, loggingService Service) {
 
 	log := v1.Group("log")
 	log.GET("", handler.GetAll)
-	log.GET("range", handler.GetAll)
+	log.GET("range", handler.GetAllByRange)
 	log.POST("", handler.Create)
 }
 

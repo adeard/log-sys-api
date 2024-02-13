@@ -12,7 +12,7 @@ type Repository interface {
 	Store(input domain.LogRequest) (domain.LogRequest, error)
 	FindAll(input domain.LogFilterRequest) ([]domain.LogData, error)
 	CountData(input domain.LogFilterRequest) (int64, error)
-	CountByDate(input domain.LogFilterRequest) (domain.LogTotalData, error)
+	CountByDate(input domain.LogFilterRequest) ([]domain.LogTotalData, error)
 }
 
 type repository struct {
@@ -112,13 +112,13 @@ func (r *repository) CountData(input domain.LogFilterRequest) (int64, error) {
 	return logTotal, nil
 }
 
-func (r *repository) CountByDate(input domain.LogFilterRequest) (domain.LogTotalData, error) {
-	var logTotalData domain.LogTotalData
+func (r *repository) CountByDate(input domain.LogFilterRequest) ([]domain.LogTotalData, error) {
+	var logTotalData []domain.LogTotalData
 
 	q := `
 	SELECT 
-		CAST(created_at AS DATE) as DateField, 
-		SUM(1) as SumField 
+		CAST(created_at AS DATE) as log_date, 
+		SUM(1) as log_total
 	FROM 
 		logs`
 
