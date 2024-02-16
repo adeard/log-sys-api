@@ -59,6 +59,19 @@ definitions:
       updated_at:
         type: string
     type: object
+  domain.LogTopErrorData:
+    properties:
+      last_created_at:
+        type: string
+      last_id:
+        type: string
+      log_total:
+        type: integer
+      response:
+        type: string
+      source:
+        type: string
+    type: object
   domain.LogTotalData:
     properties:
       log_date:
@@ -278,6 +291,66 @@ paths:
                   $ref: '#/definitions/domain.LogTotalData'
               type: object
       summary: Get All Log By Range
+      tags:
+      - Log
+  /api/v1/log/top:
+    get:
+      consumes:
+      - application/json
+      description: Get Top Error Log
+      parameters:
+      - in: query
+        name: created_at
+        type: string
+      - in: query
+        name: end_date
+        type: string
+      - in: query
+        name: limit
+        type: integer
+      - in: query
+        name: order_by
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: recipients
+        type: string
+      - in: query
+        name: request
+        type: string
+      - in: query
+        name: response
+        type: string
+      - in: query
+        name: sort_by
+        type: string
+      - in: query
+        name: source
+        type: string
+      - in: query
+        name: start_date
+        type: string
+      - in: query
+        name: status_code
+        type: integer
+      - in: query
+        name: updated_at
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/domain.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.LogTopErrorData'
+              type: object
+      summary: Get Top Error Log
       tags:
       - Log
 swagger: "2.0"

@@ -30,3 +30,11 @@ type LogTotalData struct {
 	LogDate  string `json:"log_date" form:"log_date"`
 	LogTotal int    `json:"log_total" form:"log_total"`
 }
+
+type LogTopErrorData struct {
+	Source        string `json:"source" form:"source"`
+	LogTotal      int    `json:"log_total" form:"log_total"`
+	LastCreatedAt string `json:"last_created_at" form:"last_created_at"`
+	Response      string `json:"response" form:"response"`
+	LastId        string `json:"last_id" form:"last_id"`
+}

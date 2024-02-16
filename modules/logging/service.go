@@ -4,11 +4,13 @@ import (
 	"log-sys-api/domain"
 	"log-sys-api/utils"
 	"math"
+	"time"
 )
 
 type Service interface {
 	Store(input domain.LogRequest) (domain.LogRequest, error)
 	GetAll(input domain.LogFilterRequest) (domain.PagingResponse, error)
+	GetTopError(input domain.LogFilterRequest) ([]domain.LogTopErrorData, error)
 	GetTotalByDate(input domain.LogFilterRequest) ([]domain.LogTotalData, error)
 }
 
@@ -34,6 +36,18 @@ func (s *service) GetAll(logFilter domain.LogFilterRequest) (domain.PagingRespon
 	logs, err := s.repository.FindAll(logFilter)
 	logsTotal, _ := s.repository.CountData(logFilter)
 
+	for i, logData := range logs {
+
+		logDateParse, _ := time.Parse("2006-01-02T15:04:05Z07:00", logData.CreatedAt)
+		logDate := logDateParse.Format("2006-01-02 15:04:05")
+
+		updateDateParse, _ := time.Parse("2006-01-02T15:04:05Z07:00", logData.UpdatedAt)
+		logUpdateDate := updateDateParse.Format("2006-01-02 15:04:05")
+
+		logs[i].CreatedAt = logDate
+		logs[i].UpdatedAt = logUpdateDate
+	}
+
 	totalPage := float64(logsTotal) / float64(logFilter.Limit)
 
 	result.Data = logs
@@ -41,6 +55,17 @@ func (s *service) GetAll(logFilter domain.LogFilterRequest) (domain.PagingRespon
 	result.Page = logFilter.Page
 	result.TotalData = int(logsTotal)
 	result.TotalPage = int(math.Ceil(totalPage))
+
+	return result, err
+}
+
+func (s *service) GetTopError(logFilter domain.LogFilterRequest) ([]domain.LogTopErrorData, error) {
+
+	if logFilter.Limit == 0 {
+		logFilter.Limit = 5
+	}
+
+	result, err := s.repository.GetTopError(logFilter)
 
 	return result, err
 }

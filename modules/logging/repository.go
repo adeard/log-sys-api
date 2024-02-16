@@ -3,6 +3,7 @@ package logging
 import (
 	"log-sys-api/domain"
 	"log-sys-api/utils"
+	"strconv"
 	"strings"
 
 	"gorm.io/gorm"
@@ -13,6 +14,7 @@ type Repository interface {
 	FindAll(input domain.LogFilterRequest) ([]domain.LogData, error)
 	CountData(input domain.LogFilterRequest) (int64, error)
 	CountByDate(input domain.LogFilterRequest) ([]domain.LogTotalData, error)
+	GetTopError(input domain.LogFilterRequest) ([]domain.LogTopErrorData, error)
 }
 
 type repository struct {
@@ -120,7 +122,7 @@ func (r *repository) CountByDate(input domain.LogFilterRequest) ([]domain.LogTot
 		CAST(created_at AS DATE) as log_date, 
 		SUM(1) as log_total
 	FROM 
-		logs`
+		logs `
 
 	if input.Request != "" {
 		q = q + `WHERE request LIKE %` + input.Request + `%`
@@ -135,7 +137,7 @@ func (r *repository) CountByDate(input domain.LogFilterRequest) ([]domain.LogTot
 		q = q + `WHERE source LIKE %` + input.Source + `%`
 	}
 	if input.StartDate != "" && input.EndDate != "" {
-		q = q + `WHERE created_at between ` + input.StartDate + ` and ` + input.EndDate
+		q = q + `WHERE created_at between '` + input.StartDate + ` 00:00:01' and '` + input.EndDate + ` 23:59:59'`
 	}
 
 	r.db.Raw(q + ` 
@@ -144,4 +146,38 @@ func (r *repository) CountByDate(input domain.LogFilterRequest) ([]domain.LogTot
 	`).Scan(&logTotalData)
 
 	return logTotalData, nil
+}
+
+func (r *repository) GetTopError(input domain.LogFilterRequest) ([]domain.LogTopErrorData, error) {
+	var logTopErrorData []domain.LogTopErrorData
+
+	q := `
+		SELECT TOP (` + strconv.Itoa(input.Limit) + `)
+			b.log_total, 
+			b.source, 
+			a.response,
+			b.last_created_at,
+			b.last_id           
+        FROM
+            logs a 
+			inner join (
+				SELECT 
+				   count(a.id) log_total,
+				   max(a.id) last_id,
+				   a.source,
+				  MAX(a.created_at) last_created_at
+			   FROM logs a
+			   group by a.source
+			) b on b.last_id=a.id `
+
+	if input.StartDate != "" && input.EndDate != "" {
+		q = q + `WHERE last_created_at between '` + input.StartDate + ` 00:00:01' and '` + input.EndDate + ` 23:59:59'`
+	}
+
+	r.db.Raw(q + ` 
+	ORDER BY 
+		log_total DESC
+	`).Scan(&logTopErrorData)
+
+	return logTopErrorData, nil
 }

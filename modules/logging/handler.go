@@ -20,6 +20,7 @@ func NewLoggingHandler(v1 *gin.RouterGroup, loggingService Service) {
 
 	log := v1.Group("log")
 	log.GET("", handler.GetAll)
+	log.GET("top", handler.GetTopError)
 	log.GET("range", handler.GetAllByRange)
 	log.POST("", handler.Create)
 }
@@ -92,6 +93,62 @@ func (h *loggingHandler) GetAllByRange(c *gin.Context) {
 		})
 
 		return
+	}
+
+	for i, logData := range logs {
+
+		logDateParse, _ := time.Parse("2006-01-02T15:04:05Z07:00", logData.LogDate)
+		logDate := logDateParse.Format("2006-01-02")
+		if logDate == "1900-01-01" {
+			logDate = ""
+		}
+
+		logs[i].LogDate = logDate
+	}
+
+	c.JSON(http.StatusOK, domain.Response{
+		Data:        logs,
+		ElapsedTime: fmt.Sprint(time.Since(start)),
+	})
+}
+
+// @Summary Get Top Error Log
+// @Description Get Top Error Log
+// @Accept  json
+// @Param LogFilterRequest query domain.LogFilterRequest true " LogFilterRequest Schema "
+// @Produce  json
+// @Success 200 {object} domain.Response{data=domain.LogTopErrorData}
+// @Router /api/v1/log/top [get]
+// @Tags Log
+func (h *loggingHandler) GetTopError(c *gin.Context) {
+	start := time.Now()
+	var input domain.LogFilterRequest
+
+	err := c.Bind(&input)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, domain.Response{
+			Message:     err.Error(),
+			ElapsedTime: fmt.Sprint(time.Since(start)),
+		})
+
+		return
+	}
+
+	logs, err := h.loggingService.GetTopError(input)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, domain.Response{
+			Message:     err.Error(),
+			ElapsedTime: fmt.Sprint(time.Since(start)),
+		})
+
+		return
+	}
+
+	for i, logData := range logs {
+		logDateParse, _ := time.Parse("2006-01-02T15:04:05Z07:00", logData.LastCreatedAt)
+		logDate := logDateParse.Format("2006-01-02 15:04:05")
+
+		logs[i].LastCreatedAt = logDate
 	}
 
 	c.JSON(http.StatusOK, domain.Response{
