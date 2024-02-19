@@ -76,7 +76,7 @@ func (h *loggingHandler) GetDetail(c *gin.Context) {
 	start := time.Now()
 	logId := c.Param("log_id")
 
-	logs, err := h.loggingService.GetDetail(logId)
+	logData, err := h.loggingService.GetDetail(logId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.Response{
 			Message:     err.Error(),
@@ -86,8 +86,23 @@ func (h *loggingHandler) GetDetail(c *gin.Context) {
 		return
 	}
 
+	logDateParse, _ := time.Parse("2006-01-02T15:04:05Z07:00", logData.CreatedAt)
+	logDate := logDateParse.Format("2006-01-02")
+	if logDate == "1900-01-01" {
+		logDate = ""
+	}
+
+	logUpdateDateParse, _ := time.Parse("2006-01-02T15:04:05Z07:00", logData.UpdatedAt)
+	logUpdateDate := logUpdateDateParse.Format("2006-01-02")
+	if logDate == "1900-01-01" {
+		logDate = ""
+	}
+
+	logData.CreatedAt = logDate
+	logData.UpdatedAt = logUpdateDate
+
 	c.JSON(http.StatusOK, domain.Response{
-		Data:        logs,
+		Data:        logData,
 		ElapsedTime: fmt.Sprint(time.Since(start)),
 	})
 }
