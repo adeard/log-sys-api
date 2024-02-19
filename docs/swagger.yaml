@@ -233,6 +233,32 @@ paths:
       summary: Create Log
       tags:
       - Log
+  /api/v1/log/{log_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get Detail Log
+      parameters:
+      - description: ' Log Id '
+        in: path
+        name: log_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/domain.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.LogData'
+              type: object
+      summary: Get Detail Log
+      tags:
+      - Log
   /api/v1/log/range:
     get:
       consumes:

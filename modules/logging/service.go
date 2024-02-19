@@ -4,12 +4,14 @@ import (
 	"log-sys-api/domain"
 	"log-sys-api/utils"
 	"math"
+	"strconv"
 	"time"
 )
 
 type Service interface {
 	Store(input domain.LogRequest) (domain.LogRequest, error)
 	GetAll(input domain.LogFilterRequest) (domain.PagingResponse, error)
+	GetDetail(input string) (domain.LogData, error)
 	GetTopError(input domain.LogFilterRequest) ([]domain.LogTopErrorData, error)
 	GetTotalByDate(input domain.LogFilterRequest) ([]domain.LogTotalData, error)
 }
@@ -57,6 +59,22 @@ func (s *service) GetAll(logFilter domain.LogFilterRequest) (domain.PagingRespon
 	result.TotalPage = int(math.Ceil(totalPage))
 
 	return result, err
+}
+
+func (s *service) GetDetail(input string) (domain.LogData, error) {
+	var result domain.LogData
+
+	logId, err := strconv.Atoi(input)
+	if err != nil {
+		return result, err
+	}
+
+	result, err = s.repository.FindById(logId)
+	if err != nil {
+		return result, err
+	}
+
+	return result, nil
 }
 
 func (s *service) GetTopError(logFilter domain.LogFilterRequest) ([]domain.LogTopErrorData, error) {

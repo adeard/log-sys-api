@@ -22,6 +22,7 @@ func NewLoggingHandler(v1 *gin.RouterGroup, loggingService Service) {
 	log.GET("", handler.GetAll)
 	log.GET("top", handler.GetTopError)
 	log.GET("range", handler.GetAllByRange)
+	log.GET(":log_id", handler.GetDetail)
 	log.POST("", handler.Create)
 }
 
@@ -48,6 +49,34 @@ func (h *loggingHandler) GetAll(c *gin.Context) {
 	}
 
 	logs, err := h.loggingService.GetAll(input)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, domain.Response{
+			Message:     err.Error(),
+			ElapsedTime: fmt.Sprint(time.Since(start)),
+		})
+
+		return
+	}
+
+	c.JSON(http.StatusOK, domain.Response{
+		Data:        logs,
+		ElapsedTime: fmt.Sprint(time.Since(start)),
+	})
+}
+
+// @Summary Get Detail Log
+// @Description Get Detail Log
+// @Accept  json
+// @Param log_id path string true " Log Id "
+// @Produce  json
+// @Success 200 {object} domain.Response{data=domain.LogData}
+// @Router /api/v1/log/{log_id} [get]
+// @Tags Log
+func (h *loggingHandler) GetDetail(c *gin.Context) {
+	start := time.Now()
+	logId := c.Param("log_id")
+
+	logs, err := h.loggingService.GetDetail(logId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.Response{
 			Message:     err.Error(),

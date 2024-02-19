@@ -12,6 +12,7 @@ import (
 type Repository interface {
 	Store(input domain.LogRequest) (domain.LogRequest, error)
 	FindAll(input domain.LogFilterRequest) ([]domain.LogData, error)
+	FindById(input int) (domain.LogData, error)
 	CountData(input domain.LogFilterRequest) (int64, error)
 	CountByDate(input domain.LogFilterRequest) ([]domain.LogTotalData, error)
 	GetTopError(input domain.LogFilterRequest) ([]domain.LogTopErrorData, error)
@@ -73,6 +74,21 @@ func (r *repository) FindAll(input domain.LogFilterRequest) ([]domain.LogData, e
 	}
 
 	return logs, err
+}
+
+func (r *repository) FindById(input int) (domain.LogData, error) {
+	var log domain.LogData
+
+	err := r.db.Debug().Table("logs").
+		Where("id = ? ", input).
+		First(&log).
+		Error
+
+	if err != nil {
+		return domain.LogData{}, err
+	}
+
+	return log, err
 }
 
 func (r *repository) Store(input domain.LogRequest) (domain.LogRequest, error) {
