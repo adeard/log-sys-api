@@ -87,16 +87,10 @@ func (h *loggingHandler) GetDetail(c *gin.Context) {
 	}
 
 	logDateParse, _ := time.Parse("2006-01-02T15:04:05Z07:00", logData.CreatedAt)
-	logDate := logDateParse.Format("2006-01-02")
-	if logDate == "1900-01-01" {
-		logDate = ""
-	}
+	logDate := logDateParse.Format("2006-01-02 15:04:05")
 
 	logUpdateDateParse, _ := time.Parse("2006-01-02T15:04:05Z07:00", logData.UpdatedAt)
-	logUpdateDate := logUpdateDateParse.Format("2006-01-02")
-	if logDate == "1900-01-01" {
-		logDate = ""
-	}
+	logUpdateDate := logUpdateDateParse.Format("2006-01-02 15:04:05")
 
 	logData.CreatedAt = logDate
 	logData.UpdatedAt = logUpdateDate
