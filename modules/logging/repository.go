@@ -133,33 +133,35 @@ func (r *repository) CountData(input domain.LogFilterRequest) (int64, error) {
 func (r *repository) CountByDate(input domain.LogFilterRequest) ([]domain.LogTotalData, error) {
 	var logTotalData []domain.LogTotalData
 
-	q := `
-	SELECT 
-		CAST(created_at AS DATE) as log_date, 
-		SUM(1) as log_total
-	FROM 
-		logs `
+	q := r.db.Table("logs").
+		Select(
+			`CAST(created_at AS DATE) as log_date`,
+			`SUM(1) as log_total`,
+		)
 
 	if input.Request != "" {
-		q = q + `WHERE request LIKE %` + input.Request + `%`
+		q = q.Where("request LIKE %" + input.Request + "%")
 	}
 	if input.Response != "" {
-		q = q + `WHERE response LIKE %` + input.Response + `%`
+		q = q.Where("response LIKE %" + input.Response + "%")
 	}
 	if input.StatusCode > 0 {
-		q = q + `WHERE status_code = ` + string(input.StatusCode)
+		q = q.Where("status_code = " + string(input.StatusCode))
 	}
 	if input.Source != "" {
-		q = q + `WHERE source LIKE %` + input.Source + `%`
+		q = q.Where("source LIKE %" + input.Source + "%")
 	}
 	if input.StartDate != "" && input.EndDate != "" {
-		q = q + `WHERE created_at between '` + input.StartDate + ` 00:00:01' and '` + input.EndDate + ` 23:59:59'`
+		q = q.Where(`created_at between '` + input.StartDate + ` 00:00:01' and '` + input.EndDate + ` 23:59:59'`)
 	}
 
-	r.db.Raw(q + ` 
-	GROUP BY 
-		CAST(created_at AS DATE)
-	`).Scan(&logTotalData)
+	err := q.Group("CAST(created_at AS DATE)").
+		Find(&logTotalData).
+		Error
+
+	if err != nil {
+		return []domain.LogTotalData{}, err
+	}
 
 	return logTotalData, nil
 }
