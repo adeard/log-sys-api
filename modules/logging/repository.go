@@ -118,7 +118,7 @@ func (r *repository) CountData(input domain.LogFilterRequest) (int64, error) {
 	}
 
 	if input.Source != "" {
-		q = q.Where("source = ?", input.Source)
+		q = q.Where("source LIKE ?", "%"+input.Source+"%")
 	}
 
 	if input.StartDate != "" && input.EndDate != "" {
@@ -156,6 +156,7 @@ func (r *repository) CountByDate(input domain.LogFilterRequest) ([]domain.LogTot
 	}
 
 	err := q.Group("CAST(created_at AS DATE)").
+		Order("CAST(created_at AS DATE) ASC").
 		Find(&logTotalData).
 		Error
 
