@@ -25,10 +25,16 @@ definitions:
     type: object
   domain.LogData:
     properties:
+      client_ip:
+        type: string
       created_at:
+        type: string
+      duration:
         type: string
       id:
         type: integer
+      method:
+        type: string
       recipients:
         type: string
       request:
@@ -40,11 +46,19 @@ definitions:
       status_code:
         type: integer
       updated_at:
+        type: string
+      user_agent:
         type: string
     type: object
   domain.LogRequest:
     properties:
+      client_ip:
+        type: string
       created_at:
+        type: string
+      duration:
+        type: string
+      method:
         type: string
       recipients:
         type: string
@@ -57,6 +71,8 @@ definitions:
       status_code:
         type: integer
       updated_at:
+        type: string
+      user_agent:
         type: string
     type: object
   domain.LogTopErrorData:
@@ -147,7 +163,13 @@ paths:
       description: Get All Log
       parameters:
       - in: query
+        name: client_ip
+        type: string
+      - in: query
         name: created_at
+        type: string
+      - in: query
+        name: duration
         type: string
       - in: query
         name: end_date
@@ -155,6 +177,9 @@ paths:
       - in: query
         name: limit
         type: integer
+      - in: query
+        name: method
+        type: string
       - in: query
         name: order_by
         type: string
@@ -184,6 +209,9 @@ paths:
         type: integer
       - in: query
         name: updated_at
+        type: string
+      - in: query
+        name: user_agent
         type: string
       produces:
       - application/json
@@ -266,7 +294,13 @@ paths:
       description: Get All Log By Range
       parameters:
       - in: query
+        name: client_ip
+        type: string
+      - in: query
         name: created_at
+        type: string
+      - in: query
+        name: duration
         type: string
       - in: query
         name: end_date
@@ -274,6 +308,9 @@ paths:
       - in: query
         name: limit
         type: integer
+      - in: query
+        name: method
+        type: string
       - in: query
         name: order_by
         type: string
@@ -303,6 +340,9 @@ paths:
         type: integer
       - in: query
         name: updated_at
+        type: string
+      - in: query
+        name: user_agent
         type: string
       produces:
       - application/json
@@ -326,7 +366,13 @@ paths:
       description: Get Top Error Log
       parameters:
       - in: query
+        name: client_ip
+        type: string
+      - in: query
         name: created_at
+        type: string
+      - in: query
+        name: duration
         type: string
       - in: query
         name: end_date
@@ -334,6 +380,9 @@ paths:
       - in: query
         name: limit
         type: integer
+      - in: query
+        name: method
+        type: string
       - in: query
         name: order_by
         type: string
@@ -363,6 +412,9 @@ paths:
         type: integer
       - in: query
         name: updated_at
+        type: string
+      - in: query
+        name: user_agent
         type: string
       produces:
       - application/json

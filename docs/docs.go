@@ -86,7 +86,17 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "name": "client_ip",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "name": "created_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "duration",
                         "in": "query"
                     },
                     {
@@ -97,6 +107,11 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "method",
                         "in": "query"
                     },
                     {
@@ -147,6 +162,11 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "name": "updated_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "user_agent",
                         "in": "query"
                     }
                 ],
@@ -247,7 +267,17 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "name": "client_ip",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "name": "created_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "duration",
                         "in": "query"
                     },
                     {
@@ -258,6 +288,11 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "method",
                         "in": "query"
                     },
                     {
@@ -308,6 +343,11 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "name": "updated_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "user_agent",
                         "in": "query"
                     }
                 ],
@@ -349,7 +389,17 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "name": "client_ip",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "name": "created_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "duration",
                         "in": "query"
                     },
                     {
@@ -360,6 +410,11 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "method",
                         "in": "query"
                     },
                     {
@@ -410,6 +465,11 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "name": "updated_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "user_agent",
                         "in": "query"
                     }
                 ],
@@ -521,11 +581,20 @@ const docTemplate = `{
         "domain.LogData": {
             "type": "object",
             "properties": {
+                "client_ip": {
+                    "type": "string"
+                },
                 "created_at": {
+                    "type": "string"
+                },
+                "duration": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
+                },
+                "method": {
+                    "type": "string"
                 },
                 "recipients": {
                     "type": "string"
@@ -543,6 +612,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "updated_at": {
+                    "type": "string"
+                },
+                "user_agent": {
                     "type": "string"
                 }
             }
@@ -550,7 +622,16 @@ const docTemplate = `{
         "domain.LogRequest": {
             "type": "object",
             "properties": {
+                "client_ip": {
+                    "type": "string"
+                },
                 "created_at": {
+                    "type": "string"
+                },
+                "duration": {
+                    "type": "string"
+                },
+                "method": {
                     "type": "string"
                 },
                 "recipients": {
@@ -569,6 +650,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "updated_at": {
+                    "type": "string"
+                },
+                "user_agent": {
                     "type": "string"
                 }
             }

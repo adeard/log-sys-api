@@ -79,7 +79,17 @@
                 "parameters": [
                     {
                         "type": "string",
+                        "name": "client_ip",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "name": "created_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "duration",
                         "in": "query"
                     },
                     {
@@ -90,6 +100,11 @@
                     {
                         "type": "integer",
                         "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "method",
                         "in": "query"
                     },
                     {
@@ -140,6 +155,11 @@
                     {
                         "type": "string",
                         "name": "updated_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "user_agent",
                         "in": "query"
                     }
                 ],
@@ -240,7 +260,17 @@
                 "parameters": [
                     {
                         "type": "string",
+                        "name": "client_ip",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "name": "created_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "duration",
                         "in": "query"
                     },
                     {
@@ -251,6 +281,11 @@
                     {
                         "type": "integer",
                         "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "method",
                         "in": "query"
                     },
                     {
@@ -301,6 +336,11 @@
                     {
                         "type": "string",
                         "name": "updated_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "user_agent",
                         "in": "query"
                     }
                 ],
@@ -342,7 +382,17 @@
                 "parameters": [
                     {
                         "type": "string",
+                        "name": "client_ip",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "name": "created_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "duration",
                         "in": "query"
                     },
                     {
@@ -353,6 +403,11 @@
                     {
                         "type": "integer",
                         "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "method",
                         "in": "query"
                     },
                     {
@@ -403,6 +458,11 @@
                     {
                         "type": "string",
                         "name": "updated_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "user_agent",
                         "in": "query"
                     }
                 ],
@@ -514,11 +574,20 @@
         "domain.LogData": {
             "type": "object",
             "properties": {
+                "client_ip": {
+                    "type": "string"
+                },
                 "created_at": {
+                    "type": "string"
+                },
+                "duration": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
+                },
+                "method": {
+                    "type": "string"
                 },
                 "recipients": {
                     "type": "string"
@@ -536,6 +605,9 @@
                     "type": "integer"
                 },
                 "updated_at": {
+                    "type": "string"
+                },
+                "user_agent": {
                     "type": "string"
                 }
             }
@@ -543,7 +615,16 @@
         "domain.LogRequest": {
             "type": "object",
             "properties": {
+                "client_ip": {
+                    "type": "string"
+                },
                 "created_at": {
+                    "type": "string"
+                },
+                "duration": {
+                    "type": "string"
+                },
+                "method": {
                     "type": "string"
                 },
                 "recipients": {
@@ -562,6 +643,9 @@
                     "type": "integer"
                 },
                 "updated_at": {
+                    "type": "string"
+                },
+                "user_agent": {
                     "type": "string"
                 }
             }

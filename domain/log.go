@@ -8,6 +8,10 @@ type LogRequest struct {
 	Recipients string `json:"recipients" form:"recipients"`
 	CreatedAt  string `json:"created_at" form:"created_at"`
 	UpdatedAt  string `json:"updated_at" form:"updated_at"`
+	Method     string `json:"method" form:"method"`
+	ClientIp   string `json:"client_ip" form:"client_ip"`
+	UserAgent  string `json:"user_agent" form:"user_agent"`
+	Duration   string `json:"duration" form:"duration"`
 }
 
 type LogData struct {
