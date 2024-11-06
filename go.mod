@@ -15,6 +15,8 @@ require (
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
 	github.com/microsoft/go-mssqldb v1.6.0 // indirect
 	github.com/rs/cors v1.8.1 // indirect
+	github.com/sirupsen/logrus v1.9.3 // indirect
+	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 

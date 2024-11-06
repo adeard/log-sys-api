@@ -1,7 +1,9 @@
 package logging
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"log-sys-api/domain"
 	"log-sys-api/utils"
 	"net/http"
@@ -210,7 +212,7 @@ func (h *loggingHandler) Create(c *gin.Context) {
 	err := c.ShouldBindJSON(&logInput)
 	if err != nil {
 
-		utils.LogInit(err.Error())
+		utils.LogInit("error", err.Error())
 
 		c.JSON(http.StatusBadRequest, gin.H{
 			"errors": err.Error(),
@@ -219,18 +221,42 @@ func (h *loggingHandler) Create(c *gin.Context) {
 		return
 	}
 
-	log, err := h.loggingService.Store(logInput)
+	logData, err := h.loggingService.Store(logInput)
 	if err != nil {
-		utils.LogInit(err.Error())
+		utils.LogInit("error", err.Error())
 
 		c.JSON(http.StatusBadRequest, gin.H{
 			"errors": err.Error(),
 		})
 		return
 	}
+
+	var data []map[string]interface{}
+	err = json.Unmarshal([]byte(logInput.Response), &data)
+	if err != nil {
+		var dataObject map[string]interface{}
+		err = json.Unmarshal([]byte(logInput.Response), &dataObject)
+		if err == nil {
+			prettyJson, err := json.MarshalIndent(dataObject, "", "  ")
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			logInput.Response = string(prettyJson)
+		}
+	} else {
+		prettyJson, err := json.MarshalIndent(data, "", "  ")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		logInput.Response = string(prettyJson)
+	}
+
+	utils.LogInit2(logInput.Source, logInput)
 
 	c.JSON(http.StatusOK, domain.Response{
-		Data:        log,
+		Data:        logData,
 		ElapsedTime: fmt.Sprint(time.Since(start)),
 	})
 }

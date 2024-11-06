@@ -97,12 +97,21 @@ func (s *service) GetTotalByDate(logFilter domain.LogFilterRequest) ([]domain.Lo
 
 func (s *service) Store(input domain.LogRequest) (domain.LogRequest, error) {
 
-	input.CreatedAt = utils.GetCurrentDateTime()
-	input.UpdatedAt = utils.GetCurrentDateTime()
+	if input.CreatedAt == "" {
+		input.CreatedAt = utils.GetCurrentDateTime()
+	}
+
+	if input.UpdatedAt == "" {
+		input.UpdatedAt = utils.GetCurrentDateTime()
+	}
+
+	// if input.StatusCode == 200 {
+	// 	return domain.LogRequest{}, nil
+	// }
 
 	log, err := s.repository.Store(input)
 	if err != nil {
-		utils.LogInit(err.Error())
+		utils.LogInit("error", err.Error())
 
 		return domain.LogRequest{}, err
 	}

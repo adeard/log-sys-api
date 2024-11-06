@@ -94,7 +94,7 @@ func (r *repository) FindById(input int) (domain.LogData, error) {
 func (r *repository) Store(input domain.LogRequest) (domain.LogRequest, error) {
 	err := r.db.Create(&input).Error
 	if err != nil {
-		utils.LogInit(err.Error())
+		utils.LogInit("error", err.Error())
 	}
 
 	return input, err
@@ -191,6 +191,10 @@ func (r *repository) GetTopError(input domain.LogFilterRequest) ([]domain.LogTop
 
 	if input.StartDate != "" && input.EndDate != "" {
 		q = q + `WHERE last_created_at between '` + input.StartDate + ` 00:00:01' and '` + input.EndDate + ` 23:59:59'`
+	}
+
+	if input.Source != "" {
+		q = q + `WHERE source like '%` + input.Source + `%'`
 	}
 
 	r.db.Raw(q + ` 
