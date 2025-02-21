@@ -105,9 +105,9 @@ func (s *service) Store(input domain.LogRequest) (domain.LogRequest, error) {
 		input.UpdatedAt = utils.GetCurrentDateTime()
 	}
 
-	// if input.StatusCode == 200 {
-	// 	return domain.LogRequest{}, nil
-	// }
+	if input.StatusCode == 200 {
+		return domain.LogRequest{}, nil
+	}
 
 	log, err := s.repository.Store(input)
 	if err != nil {
