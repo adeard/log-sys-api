@@ -23,11 +23,6 @@ func LogInit(host string, message string) {
 	log.Println(message)
 }
 
-func firstDir(permalink string) string {
-	split := strings.Split(permalink, string(os.PathSeparator))
-	return split[1]
-}
-
 func LogInit2(host string, message domain.LogRequest) {
 	appName := "unnamed"
 	now := time.Now().Format("2006-01-02")
@@ -43,7 +38,7 @@ func LogInit2(host string, message domain.LogRequest) {
 
 	split := strings.Split(parsedURL.Path, "/")
 
-	if len(split) > 0 {
+	if len(split) > 1 {
 		appName = split[1]
 	}
 
